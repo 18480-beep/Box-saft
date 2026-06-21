@@ -1,0 +1,373 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.sim-wrap{display:flex;flex-wrap:wrap;gap:16px;padding:16px;align-items:flex-start;justify-content:center}
+.col-title{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;text-align:center}
+
+/* pill box */
+.pill-box{width:238px;background:#1a1d26;border-radius:18px;padding:14px;flex-shrink:0}
+.pill-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:8px}
+.pill-slot{aspect-ratio:1;background:#262a38;border:1px solid #333;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#555;position:relative;cursor:default}
+.pill-slot .sled{width:5px;height:5px;border-radius:50%;background:#1c2e20;margin-top:3px}
+.pill-slot.ringing{border-color:#f0a93e99;background:#2a2510;animation:spulse .6s infinite}
+.pill-slot.ringing .sled{background:#f0a93e;box-shadow:0 0 6px #f0a93e}
+.pill-slot.done{border-color:#2fb67080;background:#122418;color:#3a5}
+.pill-slot.done .sled{background:#2fb670;box-shadow:0 0 5px #2fb670}
+@keyframes spulse{0%,100%{box-shadow:0 0 0 0 #f0a93e55}50%{box-shadow:0 0 0 5px #f0a93e00}}
+
+.pill-base{background:#111318;border-radius:12px;padding:10px 12px}
+.led-row{display:flex;justify-content:space-between;padding:0 2px 8px}
+.led-num{display:flex;flex-direction:column;align-items:center;gap:2px}
+.led-num span{font-size:7.5px;color:#444}
+.led-dot{width:4px;height:4px;border-radius:50%;background:#1c2e20}
+.led-dot.on{background:#2fb670;box-shadow:0 0 4px #2fb670}
+.led-dot.ring{background:#f0a93e;box-shadow:0 0 6px #f0a93e}
+
+.box-status{background:#0d1a10;border:1px solid #1c3a1c;border-radius:9px;padding:8px 10px;min-height:36px;margin:6px 0}
+.box-status .stxt{font-size:10px;color:#4db878;line-height:1.5}
+.box-status .stxt.muted{color:#2a4a2a}
+
+.btn-row{display:flex;justify-content:space-around;margin-top:6px}
+.hbtn{background:#262a38;border:1px solid #333;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-direction:column;gap:2px}
+.hbtn .bico{font-size:14px}
+.hbtn .bcap{font-size:7px;color:#555}
+.hbtn:hover{background:#30354a}
+
+.quickbtns{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px;justify-content:center}
+.qbtn{font-size:9px;font-weight:600;padding:4px 7px;border-radius:6px;border:1px solid #333;background:#1a1d26;color:#666;cursor:pointer}
+.qbtn:hover{background:#262a38;color:#aaa}
+
+/* LINE phone frame */
+.phone-frame{width:220px;background:#111318;border-radius:28px;padding:8px;flex-shrink:0}
+.phone-inner{background:#f4f5f6;border-radius:22px;overflow:hidden;height:440px;display:flex;flex-direction:column;position:relative}
+.phone-notch{position:absolute;top:7px;left:50%;transform:translateX(-50%);width:60px;height:13px;background:#111;border-radius:8px;z-index:10}
+.phone-statusbar{height:28px;background:#00b900;display:flex;align-items:flex-end;justify-content:space-between;padding:3px 12px;font-size:9px;color:#fff;font-weight:600;flex-shrink:0;position:relative;z-index:5}
+.phone-body{flex:1;display:flex;flex-direction:column;background:#e6e6e6;overflow:hidden}
+
+/* LINE top bar */
+.line-topbar{background:#00b900;padding:6px 10px 8px;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.line-avatar{width:28px;height:28px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.line-name-area{flex:1}
+.line-name{font-size:11px;font-weight:700;color:#fff}
+.line-sub{font-size:8.5px;color:#b8ffb8}
+
+/* chat area */
+.chat-area{flex:1;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:6px}
+.chat-bubble{max-width:80%;padding:6px 9px;border-radius:12px;font-size:10px;line-height:1.5;position:relative}
+.chat-bubble.from-bot{background:#fff;color:#222;border-top-left-radius:3px;align-self:flex-start;box-shadow:0 1px 2px #0001}
+.chat-bubble.from-user{background:#00b900;color:#fff;border-top-right-radius:3px;align-self:flex-end}
+.chat-time{font-size:8px;color:#aaa;margin-top:1px;align-self:flex-end}
+.chat-time.left{align-self:flex-start}
+
+/* LINE menu keyboard */
+.line-keyboard{background:#d4d4d4;padding:6px 8px;flex-shrink:0}
+.line-menu-row{display:flex;gap:4px;margin-bottom:4px}
+.lmenu-btn{flex:1;background:#fff;border:none;border-radius:6px;padding:5px 2px;font-size:8.5px;font-weight:600;color:#333;cursor:pointer;text-align:center;line-height:1.3}
+.lmenu-btn:active,.lmenu-btn.active-btn{background:#00b900;color:#fff}
+.lmenu-btn.red-btn{background:#e2483b;color:#fff}
+.line-text-row{display:flex;gap:4px;margin-top:2px}
+.line-text-row input{flex:1;border-radius:16px;border:none;padding:4px 9px;font-size:9px;background:#fff}
+.line-send-btn{width:28px;height:28px;border-radius:50%;background:#00b900;border:none;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* setup modal overlay */
+.setup-overlay{position:absolute;inset:0;background:#ffffffe0;z-index:50;display:none;flex-direction:column;overflow-y:auto;padding:8px}
+.setup-overlay.show{display:flex}
+.setup-title{font-size:12px;font-weight:700;color:#222;margin-bottom:8px;text-align:center}
+.slot-setup-row{display:flex;align-items:center;gap:5px;margin-bottom:5px}
+.slot-setup-row .snum{width:18px;height:18px;border-radius:50%;background:#00b900;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.slot-setup-row input[type=text]{flex:1;border:1px solid #ddd;border-radius:5px;padding:3px 6px;font-size:9px}
+.slot-setup-row input[type=time]{width:68px;border:1px solid #ddd;border-radius:5px;padding:3px 4px;font-size:9px}
+.setup-save-btn{width:100%;margin-top:6px;background:#00b900;color:#fff;border:none;border-radius:8px;padding:7px;font-size:10px;font-weight:700;cursor:pointer}
+.setup-cancel-btn{width:100%;margin-top:4px;background:#eee;color:#555;border:none;border-radius:8px;padding:6px;font-size:9.5px;cursor:pointer}
+
+/* confirm screen */
+.confirm-overlay{position:absolute;inset:0;background:#ffffffe0;z-index:60;display:none;flex-direction:column;overflow-y:auto;padding:8px}
+.confirm-overlay.show{display:flex}
+.confirm-title{font-size:11px;font-weight:700;color:#222;margin-bottom:6px;text-align:center}
+.confirm-list{background:#f8f8f8;border-radius:8px;padding:6px 8px;margin-bottom:6px}
+.confirm-item{font-size:9px;color:#333;padding:3px 0;border-bottom:1px solid #eee;display:flex;gap:5px}
+.confirm-item:last-child{border-bottom:none}
+.confirm-item .ci-num{width:14px;height:14px;border-radius:50%;background:#00b900;color:#fff;font-size:7.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.confirm-btn{width:100%;background:#00b900;color:#fff;border:none;border-radius:8px;padding:7px;font-size:10px;font-weight:700;cursor:pointer;margin-top:4px}
+.back-btn{width:100%;background:#eee;color:#555;border:none;border-radius:8px;padding:6px;font-size:9.5px;cursor:pointer;margin-top:4px}
+</style>
+
+<h2 class="sr-only">CareBox Smart Essential — LINE Chatbot Simulator (รุ่นประหยัด 549 บาท)</h2>
+
+<div class="sim-wrap">
+
+  <!-- PILL BOX -->
+  <div>
+    <div class="col-title">กล่องยา CareBox · Smart Essential</div>
+    <div class="pill-box">
+      <div class="pill-grid" id="pillGrid"></div>
+      <div class="pill-base">
+        <div class="led-row" id="ledRow"></div>
+        <div class="box-status">
+          <div class="stxt muted" id="boxMsg">พร้อมทำงาน · กด "ทดสอบแจ้งเตือน" เพื่อจำลอง</div>
+        </div>
+        <div class="btn-row">
+          <button class="hbtn" onclick="openSetupPhone()"><div class="bico">⚙️</div><div class="bcap">ตั้งค่า</div></button>
+          <button class="hbtn" onclick="testRemind()"><div class="bico">🔔</div><div class="bcap">ทดสอบ</div></button>
+          <button class="hbtn" onclick="markTaken()"><div class="bico">🏠</div><div class="bcap">หน้าหลัก</div></button>
+        </div>
+        <div class="quickbtns">
+          <button class="qbtn" onclick="triggerRemind(1)">ช่อง 1 ถึงเวลา</button>
+          <button class="qbtn" onclick="triggerRemind(3)">ช่อง 3 ถึงเวลา</button>
+          <button class="qbtn" onclick="triggerRemind(5)">ช่อง 5 ถึงเวลา</button>
+          <button class="qbtn" onclick="stopBuzz()">หยุดเสียง</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LINE PHONE -->
+  <div>
+    <div class="col-title">มือถือ · LINE Chatbot</div>
+    <div class="phone-frame">
+      <div class="phone-inner">
+        <div class="phone-notch"></div>
+        <div class="phone-statusbar"><span>9:41</span><span>LINE · 📶🔋</span></div>
+
+        <div class="phone-body">
+          <div class="line-topbar">
+            <div class="line-avatar">💊</div>
+            <div class="line-name-area">
+              <div class="line-name">CareBox</div>
+              <div class="line-sub">Official Account</div>
+            </div>
+          </div>
+
+          <div class="chat-area" id="chatArea">
+            <div class="chat-bubble from-bot">สวัสดีครับ! กดเมนูด้านล่างเพื่อตั้งค่าหรือดูสถานะกล่องยา 💊</div>
+            <div class="chat-time left">09:00</div>
+          </div>
+
+          <!-- Setup overlay -->
+          <div class="setup-overlay" id="setupOverlay">
+            <div class="setup-title">⚙️ ตั้งค่าช่องยา</div>
+            <div id="slotForms"></div>
+            <button class="setup-save-btn" onclick="saveSetup()">ยืนยันตั้งค่า</button>
+            <button class="setup-cancel-btn" onclick="closeSetup()">ยกเลิก</button>
+          </div>
+
+          <!-- Confirm overlay -->
+          <div class="confirm-overlay" id="confirmOverlay">
+            <div class="confirm-title">📋 ยืนยันตารางยา</div>
+            <div class="confirm-list" id="confirmList"></div>
+            <button class="confirm-btn" onclick="doConfirm()">✅ ยืนยัน บันทึกลงกล่อง</button>
+            <button class="back-btn" onclick="goBackSetup()">← แก้ไข</button>
+          </div>
+
+          <div class="line-keyboard">
+            <div class="line-menu-row">
+              <button class="lmenu-btn" onclick="menuSetup()">⚙️ ตั้งค่าช่องยา</button>
+              <button class="lmenu-btn" onclick="menuStatus()">📊 ดูสถานะ</button>
+              <button class="lmenu-btn" onclick="menuHelp()">❓ วิธีใช้</button>
+            </div>
+            <div class="line-text-row">
+              <input type="text" id="lineInput" placeholder="พิมพ์ข้อความ..." onkeydown="if(event.key==='Enter')sendChat()">
+              <button class="line-send-btn" onclick="sendChat()">&#10148;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const slotCount = 8;
+const slots = {};
+for(let i=1;i<=slotCount;i++) slots[i]={name:'',time:''};
+
+let activeRing = null;
+let buzzInterval = null;
+let pendingSetup = null;
+
+function buildGrid(){
+  const g = document.getElementById('pillGrid');
+  g.innerHTML='';
+  for(let i=1;i<=slotCount;i++){
+    const d=document.createElement('div');
+    d.className='pill-slot';
+    d.id='slot'+i;
+    d.innerHTML=`<span>${i}</span><div class="sled" id="sled${i}"></div>`;
+    g.appendChild(d);
+  }
+}
+buildGrid();
+
+function buildLeds(){
+  const r=document.getElementById('ledRow');
+  r.innerHTML='';
+  for(let i=1;i<=slotCount;i++){
+    r.innerHTML+=`<div class="led-num"><span>${i}</span><div class="led-dot" id="led${i}"></div></div>`;
+  }
+}
+buildLeds();
+
+function setBoxMsg(txt,muted=false){
+  const el=document.getElementById('boxMsg');
+  el.textContent=txt;
+  el.className='stxt'+(muted?' muted':'');
+}
+
+function triggerRemind(slot){
+  stopBuzz();
+  activeRing=slot;
+  document.getElementById('slot'+slot).className='pill-slot ringing';
+  document.getElementById('led'+slot).className='led-dot ring';
+  setBoxMsg('🔔 ถึงเวลาทานยาช่องที่ '+slot+' แล้ว! (ปิ๊บๆๆ)');
+
+  let ct=0;
+  buzzInterval=setInterval(()=>{
+    ct++;
+    if(ct>6){stopBuzz(); return;}
+  },1800);
+
+  addLineNotif(slot);
+  speak('คุณปู่ครับ ถึงเวลาทานยาช่องที่ '+slot+' แล้วครับ');
+}
+
+function stopBuzz(){
+  if(buzzInterval){clearInterval(buzzInterval);buzzInterval=null;}
+  if(activeRing){
+    document.getElementById('slot'+activeRing).className='pill-slot done';
+    document.getElementById('led'+activeRing).className='led-dot on';
+    activeRing=null;
+  }
+  setBoxMsg('พร้อมทำงาน · กด "ทดสอบแจ้งเตือน" เพื่อจำลอง',true);
+}
+
+function testRemind(){triggerRemind(1);}
+
+function markTaken(){
+  stopBuzz();
+  addChat('bot','✅ บันทึกแล้ว: ทานยาช่องที่ 1 เรียบร้อยแล้วครับ 09:01 น.');
+}
+
+function addLineNotif(slot){
+  const n=slots[slot].name||('ช่องที่ '+slot);
+  const t=slots[slot].time||'ตอนนี้';
+  addChat('bot','🔔 ถึงเวลาทานยา: '+n+' ('+t+') ช่องที่ '+slot+' ครับ กรุณาเปิดกล่อง 💊');
+}
+
+function addChat(who,msg){
+  const ca=document.getElementById('chatArea');
+  const d=document.createElement('div');
+  d.className='chat-bubble from-'+(who==='bot'?'bot':'user');
+  d.textContent=msg;
+  ca.appendChild(d);
+  const t=document.createElement('div');
+  const now=new Date();
+  t.className='chat-time'+(who==='bot'?' left':'');
+  t.textContent=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  ca.appendChild(t);
+  ca.scrollTop=ca.scrollHeight;
+}
+
+function sendChat(){
+  const inp=document.getElementById('lineInput');
+  const v=inp.value.trim();
+  if(!v)return;
+  addChat('user',v);
+  inp.value='';
+  setTimeout(()=>{
+    const low=v.toLowerCase();
+    if(low.includes('สถานะ')||low.includes('status')){menuStatus();}
+    else if(low.includes('ตั้งค่า')||low.includes('setup')){menuSetup();}
+    else if(low.includes('ช่วย')||low.includes('help')){menuHelp();}
+    else{addChat('bot','ขอโทษครับ ไม่เข้าใจคำสั่ง กรุณากดเมนูด้านล่างครับ 🙏');}
+  },400);
+}
+
+function menuSetup(){
+  addChat('user','⚙️ ตั้งค่าช่องยา');
+  setTimeout(()=>{
+    addChat('bot','กรุณากรอกชื่อยาและเวลาสำหรับแต่ละช่อง (1-8) ครับ');
+    openSetupOverlay();
+  },300);
+}
+
+function openSetupOverlay(){
+  const sf=document.getElementById('slotForms');
+  sf.innerHTML='';
+  for(let i=1;i<=slotCount;i++){
+    sf.innerHTML+=`<div class="slot-setup-row">
+      <div class="snum">${i}</div>
+      <input type="text" id="sname${i}" placeholder="ชื่อยา/สิ่งของ" value="${slots[i].name}">
+      <input type="time" id="stime${i}" value="${slots[i].time}">
+    </div>`;
+  }
+  document.getElementById('setupOverlay').classList.add('show');
+}
+
+function openSetupPhone(){menuSetup();}
+
+function closeSetup(){
+  document.getElementById('setupOverlay').classList.remove('show');
+}
+
+function saveSetup(){
+  const temp=[];
+  for(let i=1;i<=slotCount;i++){
+    const n=document.getElementById('sname'+i).value.trim();
+    const t=document.getElementById('stime'+i).value;
+    if(n||t) temp.push({slot:i,name:n||('ช่องที่ '+i),time:t||'--:--'});
+    slots[i]={name:n,time:t};
+  }
+  pendingSetup=temp;
+  closeSetup();
+  showConfirm(temp);
+}
+
+function showConfirm(list){
+  const cl=document.getElementById('confirmList');
+  if(!list.length){
+    addChat('bot','ไม่มีช่องยาที่ตั้งค่าไว้ครับ กรุณาลองใหม่');
+    return;
+  }
+  cl.innerHTML=list.map(x=>`<div class="confirm-item"><div class="ci-num">${x.slot}</div><span>${x.name} — ${x.time} น.</span></div>`).join('');
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+
+function goBackSetup(){
+  document.getElementById('confirmOverlay').classList.remove('show');
+  openSetupOverlay();
+}
+
+function doConfirm(){
+  document.getElementById('confirmOverlay').classList.remove('show');
+  const saved=pendingSetup.map(x=>'ช่อง '+x.slot+': '+x.name+' '+x.time+' น.').join('\n');
+  addChat('bot','✅ บันทึกตารางยาเรียบร้อยแล้วครับ!\n\n'+saved+'\n\nจะแจ้งเตือนผ่าน LINE และ เสียงกล่อง ตามที่ตั้งไว้ครับ 🏥');
+  setBoxMsg('บันทึกตารางยาเรียบร้อย',false);
+  pendingSetup=null;
+}
+
+function menuStatus(){
+  addChat('user','📊 ดูสถานะ');
+  const configured=Object.entries(slots).filter(([,v])=>v.name||v.time);
+  if(!configured.length){
+    setTimeout(()=>addChat('bot','ยังไม่มีตารางยา กรุณาตั้งค่าก่อนนะครับ 🙏'),300);
+    return;
+  }
+  const lines=configured.map(([k,v])=>`ช่อง ${k}: ${v.name||'ยังไม่ตั้งชื่อ'} เวลา ${v.time||'--'}`).join('\n');
+  setTimeout(()=>addChat('bot','📊 สถานะกล่องยาปัจจุบัน:\n\n'+lines),300);
+}
+
+function menuHelp(){
+  addChat('user','❓ วิธีใช้');
+  setTimeout(()=>addChat('bot','วิธีใช้ CareBox Smart Essential:\n\n1️⃣ กด "ตั้งค่าช่องยา" ใส่ชื่อยาและเวลา\n2️⃣ กล่องจะส่งเสียง ปิ๊บๆ + ไฟกระพริบตรงช่องที่ถึงเวลา\n3️⃣ LINE จะแจ้งเตือนผู้ดูแลด้วย (ต้องมีอินเทอร์เน็ต)\n4️⃣ เปิดกล่อง หยิบยา แล้วปิดฝา บันทึกอัตโนมัติ\n\nรุ่นนี้ใช้ LINE แทนแอป ประหยัดและง่ายมาก! 💚'),300);
+}
+
+function speak(t){
+  try{
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(t);
+    u.lang='th-TH';u.rate=0.95;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+</script>
